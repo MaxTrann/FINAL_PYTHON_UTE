@@ -20,12 +20,12 @@ class dataCleaner:
             print(f"\nThông tin về cột {col}': ")
             print(self.data[col].value_counts())
             
-    def sortData(self, col_index = 0,reverse=False):
-        # <Sắp xếp dữ liệu của một cột thông qua chỉ số cột>
+    def sortData(self, col_index=0, reverse=False):
         try:
-            self.data.sort(key=lambda x: x[col_index], reverse=reverse)
+            col_name = self.data.columns[col_index]
+            self.data = self.data.sort_values(by=col_name, ascending=reverse)
             print("Dữ liệu đã được sắp xếp!")
-        except:
+        except IndexError:
             print("Chỉ số cột không hợp lệ!")
     
     def getDataByIndex(self, idx):
