@@ -61,7 +61,7 @@ class dataCleaner:
         else:
             print("Tên cột không hợp lệ")
     
-    def cleanCategoriData(self, colName, validValues):
+    def cleanCategoryData(self, colName, validValues):
         # <Chuẩn hóa dữ liệu chữ Femal thì femal được; Public thì public được>
         self.data[colName] = self.data[colName].str.lower()
         #self.data = self.data[self.data[colName].isin(validValues)]
