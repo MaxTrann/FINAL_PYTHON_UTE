@@ -31,7 +31,7 @@ class dataCleaner:
     def getDataByIndex(self, idx):
         # <Lấy dữ liệu thông qua chỉ số dòng>
         if 0 <= idx <= len(self.data):
-            return self.data[idx]
+            return self.data.iloc[idx - 1]
         else:
             print("Vị trí không hợp lệ!")
             return None
