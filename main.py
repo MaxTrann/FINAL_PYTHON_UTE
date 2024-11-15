@@ -1,5 +1,5 @@
 from dataCRUD import dataProcessing
-from dataCLEANING import *
+from dataCleaning import *
 
 def ShowMenu():
     print ("\n       +---------------------DATA EXECUTION---------------------+")
