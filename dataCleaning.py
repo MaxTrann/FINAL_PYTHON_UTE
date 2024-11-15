@@ -64,7 +64,8 @@ class dataCleaner:
     def cleanCategoriData(self, colName, validValues):
         # <Chuẩn hóa dữ liệu chữ Femal thì femal được; Public thì public được>
         self.data[colName] = self.data[colName].str.lower()
-        self.data = self.data[self.data[colName].isin(validValues)]
+        #self.data = self.data[self.data[colName].isin(validValues)]
+        self.data[colName] = self.data[colName].str.capitalize()
     
     
     def deleteOutliers(self):
