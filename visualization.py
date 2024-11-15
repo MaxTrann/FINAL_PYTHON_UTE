@@ -4,7 +4,7 @@ import seaborn as sns
 import warnings 
 warnings.simplefilter(action='ignore', category=FutureWarning) #bỏ qua các dòng warning
 
-file_path = 'StudentPerformanceFactors.csv'
+file_path = 'cleaned_StudentPerformanceFactors.csv'
 
 # Đọc dữ liệu vào DataFrame
 data = pd.read_csv(file_path)
@@ -87,7 +87,7 @@ plt.xlabel("Teacher Quality")
 plt.ylabel("Average Exam Score")
 plt.show()
 
-# 10. Bar Chart - Điểm thi trung bình theo mức giáo dục của phụ huynh
+# 10. Bar Chart - Điểm thi trung bình theo trình độ học vấn của phụ huynh
 plt.figure(figsize=(10, 6))
 parental_education_avg_score = data.groupby('Parental_Education_Level')['Exam_Score'].mean().reset_index()
 sns.barplot(x='Parental_Education_Level', y='Exam_Score', data=parental_education_avg_score, palette='viridis')
