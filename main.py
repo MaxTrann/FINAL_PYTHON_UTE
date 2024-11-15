@@ -103,15 +103,17 @@ def main():
                         try:
                             Clean_Choosing = int(input("Choose Cleaning Data's option: "))
                             if Clean_Choosing >= 0 and Clean_Choosing < 9:
-                                
+
+                                # Thoát
                                 if Clean_Choosing == 0:
                                     break
 
+                                # Thống kê từng dữ liệu từ file
                                 elif Clean_Choosing == 1:
                                     Cleaning_Data.aggregateData()
 
+                                # Sắp xếp cột dữ liệu
                                 elif Clean_Choosing == 2:
-                                    # Sắp xếp cột dữ liệu
                                     while True:
                                         try:
                                             col_index = int(input("Input the column that you want to sort: "))
@@ -124,7 +126,8 @@ def main():
                                                 continue
                                         except ValueError:
                                             print ("\nInvalid input. Please enter a number")
-                                    
+
+                                # Lấy dữ liệu đối tượng thông qua chỉ số dòng
                                 elif Clean_Choosing == 3:
                                     while True:
                                         try:
@@ -138,6 +141,7 @@ def main():
                                         except ValueError:
                                             print ("\nInvalid Input. Please enter a number.")
 
+                                # Tìm kiếm thông tin các đối tượng qua tên cột và keyword
                                 elif Clean_Choosing == 4:
                                     colName = input("Enter Column Name: ")
                                     if colName in Cleaning_Data.data.columns:
@@ -146,9 +150,11 @@ def main():
                                     else:
                                         print ("Invalid Column Name.")
 
+                                # Xóa những dòng bị thiếu dữ liệu
                                 elif Clean_Choosing == 5:
                                     Cleaning_Data.deleteMissingData()
 
+                                # Điền giá trị vào ô trống qua từng qua cột
                                 elif Clean_Choosing == 6:
                                     colName = input("Enter Column Name: ")
                                     if colName in Cleaning_Data.data.columns:
@@ -157,15 +163,17 @@ def main():
                                     else:
                                         print ("Invalid Column Name.")
 
+                                # Chuẩn hóa dữ liệu
                                 elif Clean_Choosing == 7:
                                     Cleaning_Data.cleanCategoryData('Gender', ['male', 'female', 'other'])
                                     Cleaning_Data.cleanCategoryData('School_Type', ['public', 'private'])
                                     Cleaning_Data.cleanCategoryData('Parental_Education_Level', ['high school', 'college', 'postgraduate'])
 
+                                # Xóa những giá trị ngoại lai
                                 elif Clean_Choosing == 8:
                                     Cleaning_Data.deleteOutliers()
 
-                                # Lưu dữ liệu đã xử lý vào file
+                                # Lưu dữ liệu đã được xử lý vào file khác
                                 Cleaning_Data.data.to_csv(outfileDataCleaned, index=False)
                                 print("Data is saved in new CSV file.")
                             else:
