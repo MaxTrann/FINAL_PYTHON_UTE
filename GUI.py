@@ -1,5 +1,5 @@
 from pathlib import Path
-from tkinter import Tk, Canvas, Button, PhotoImage, messagebox, simpledialog, Toplevel
+from tkinter import Tk, Canvas, Button, PhotoImage, messagebox, simpledialog, Toplevel, Text, Scrollbar, Label, Frame, filedialog, ttk, END
 from dataCRUD import dataProcessing
 from dataCleaning import *
 
@@ -77,13 +77,68 @@ class DataApp:
             button.image = button_image
             button.place(x=x, y=y, width=width, height=height)
 
+    
+
     def display_data(self):
-        data = self.data_frame.getData()
-        if data:
-            display = "\n".join(map(str, data))
-            messagebox.showinfo("Data Sheet", display)
-        else:
-            messagebox.showwarning("No Data", "No data available to display.")
+        try:
+            data = self.data_frame.getData()
+            if data:
+                # Tạo cửa sổ con
+                top = Toplevel(self.root)
+                top.title("Data Viewer")
+                top.geometry("900x600")
+                top.configure(bg="#f4f4f4")  # Màu nền dịu nhẹ
+                
+
+                # Thêm Frame quản lý Text widget và Scrollbars
+                frame = Frame(top, bg="#f4f4f4", pady=10, padx=10)
+                frame.pack(fill="both", expand=True)
+
+                # Thêm Text widget với Scrollbars
+                text = Text(frame, wrap="none", font=("Courier New", 11), bg="#ffffff", fg="#333333", relief="flat", padx=10, pady=10)
+                scroll_y = Scrollbar(frame, orient="vertical", command=text.yview)
+                scroll_x = Scrollbar(frame, orient="horizontal", command=text.xview)
+                text.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+
+                # Đặt layout
+                text.grid(row=0, column=0, sticky="nsew")
+                scroll_y.grid(row=0, column=1, sticky="ns")
+                scroll_x.grid(row=1, column=0, sticky="ew")
+
+                # Cấu hình lưới trong Frame
+                frame.grid_rowconfigure(0, weight=1)
+                frame.grid_columnconfigure(0, weight=1)
+
+                # Thêm dữ liệu vào Text widget
+                for i, row in enumerate(data):
+                    # Tô màu các dòng xen kẽ
+                    bg_color = "#f9f9f9" if i % 2 == 0 else "#e8f5e9"
+                    text.insert("end", f"{row}\n")
+                    text.tag_add(f"row{i}", f"{i}.0", f"{i}.end")
+                    text.tag_config(f"row{i}", background=bg_color)
+
+                # Vô hiệu hóa chỉnh sửa nội dung
+                text.config(state="disabled")
+
+                # Thêm nút Export
+                def export_to_file():
+                    try:
+                        file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
+                        if file_path:
+                            with open(file_path, "w") as file:
+                                file.write("\n".join(map(str, data)))
+                            messagebox.showinfo("Success", "Data exported successfully!")
+                    except Exception as e:
+                        messagebox.showerror("Error", f"Failed to export data: {e}")
+
+                export_button = Button(top, text="Export to File", command=export_to_file, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5)
+                export_button.pack(pady=10)
+
+            else:
+                messagebox.showwarning("No Data", "No data available to display.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred: {e}")
+
 
     def add_record(self):
         new_data = simpledialog.askstring("Input", "Enter new comma-separated values' record:")
