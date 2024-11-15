@@ -40,20 +40,19 @@ def main():
                             Data_Frame.addData(new_data)
                             break
                         else:
-                            print ("Invalid field count. Enter data with correct field count.")
+                            print ("\nInvalid field count. Enter data with correct field count.")
 
                 # Cập nhật bản ghi
                 elif Choice == 3:
                     print ("\nUpdate data record")
                     while True:
-                        Updated_Index = input("Input updated data's index: ")
-                        if Updated_Index.isdigit():
-                            Updated_Index = int(Updated_Index)
+                        try:
+                            Updated_Index = int(input("Input updated data's index: "))
                             if 0 < Updated_Index < len(Data_Frame.getData()):
                                 break
                             else:
                                 print ("\nInvalid input. Please try again")
-                        else:
+                        except ValueError:
                             print ("\nInvalid input. Please enter a number.")
                     while True:
                         Updated_Data = input("Enter new comma-separated values' record: ").split(',')
@@ -61,21 +60,20 @@ def main():
                             Data_Frame.updateData(Updated_Index, Updated_Data)
                             break
                         else:
-                            print ("Invalid field count. Please enter data with correct field count.")
+                            print ("\nInvalid field count. Please enter data with correct field count.")
 
                 # Xóa bản ghi
                 elif Choice == 4:
                     print ("\nDelete data record")
                     while True:
-                        Deleted_Index = input("Input deleted data's index: ")
-                        if Deleted_Index.isdigit():
-                            Deleted_Index = int(Deleted_Index)
+                        try:
+                            Deleted_Index = int(input("Input deleted data's index: "))
                             if 0 < Deleted_Index < len(Data_Frame.getData()):
                                 break
                             else:
-                                print ("Invalid input. Please choose again")
-                        else:
-                            print ("Invalid input. Please enter a number.")
+                                print ("\nInvalid input. Please choose again")
+                        except:
+                            print ("\nInvalid input. Please enter a number.")
                     Data_Frame.deleteData(Deleted_Index)
 
                 # Lưu bản ghi
