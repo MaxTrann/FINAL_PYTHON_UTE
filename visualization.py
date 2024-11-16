@@ -4,7 +4,7 @@ import seaborn as sns
 import warnings 
 warnings.simplefilter(action='ignore', category=FutureWarning) #bỏ qua các dòng warning
 
-file_path = 'cleaned_StudentPerformanceFactors.csv'
+file_path = 'visual_StudentPerformanceFactors.csv'
 
 # Đọc dữ liệu vào DataFrame
 data = pd.read_csv(file_path)

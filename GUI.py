@@ -195,6 +195,7 @@ class DataApp:
         data_cleaning_window.geometry("970x539")
         data_cleaning_window.configure(bg="#FFFFFF")
         
+        
         # Canvas trong Toplevel
         canvas = Canvas(
             data_cleaning_window,
@@ -312,6 +313,13 @@ class DataApp:
         data_cleaning_window.resizable(False, False)
         data_cleaning_window.mainloop()
 
+    def save_cleaned_data(self, data):
+        try:
+            data.to_csv(self.cleaned_file, index=False)
+            print(f"Data has been automatically saved to {self.cleaned_file}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to save data: {str(e)}")
+
     def data_statistics(self):
         cleaner = dataCleaner(self.data_file)
         cleaner.aggregateData()
@@ -322,6 +330,7 @@ class DataApp:
             reverse = simpledialog.askstring("Input", "Sort in ascending order? (y/n):").lower() == 'y'
             cleaner = dataCleaner(self.data_file)
             cleaner.sortData(col_index=col_index, reverse=reverse)
+            self.save_cleaned_data(cleaner.data)
         except ValueError:
             messagebox.showerror("Error", "Invalid column index.")
 
@@ -343,12 +352,15 @@ class DataApp:
     def delete_missing_data(self):
         cleaner = dataCleaner(self.data_file)
         cleaner.deleteMissingData()
+        self.save_cleaned_data(cleaner.data)
 
     def fill_missing_data(self):
         col_name = simpledialog.askstring("Input", "Enter column name to fill:")
         value = simpledialog.askstring("Input", "Enter value to fill missing data:")
         cleaner = dataCleaner(self.data_file)
         cleaner.fillMissingData(col_name, value)
+        self.save_cleaned_data(cleaner.data)
+
 
     def standardize_data(self):
         cleaner = dataCleaner(self.data_file)
@@ -359,6 +371,7 @@ class DataApp:
     def delete_outliers(self):
         cleaner = dataCleaner(self.data_file)
         cleaner.deleteOutliers()
+        self.save_cleaned_data(cleaner.data)
 
 
 if __name__ == "__main__":
