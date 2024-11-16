@@ -88,37 +88,73 @@ class DataApp:
                 top.title("Data Viewer")
                 top.geometry("900x600")
                 top.configure(bg="#f4f4f4")  # Màu nền dịu nhẹ
-                
 
-                # Thêm Frame quản lý Text widget và Scrollbars
+                # Số dòng mỗi trang
+                rows_per_page = 20
+                total_pages = (len(data) + rows_per_page - 1) // rows_per_page  # Tính số trang
+                current_page = 1
+
+                # Thêm Frame quản lý Treeview widget và Scrollbars
                 frame = Frame(top, bg="#f4f4f4", pady=10, padx=10)
                 frame.pack(fill="both", expand=True)
 
-                # Thêm Text widget với Scrollbars
-                text = Text(frame, wrap="none", font=("Courier New", 11), bg="#ffffff", fg="#333333", relief="flat", padx=10, pady=10)
-                scroll_y = Scrollbar(frame, orient="vertical", command=text.yview)
-                scroll_x = Scrollbar(frame, orient="horizontal", command=text.xview)
-                text.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
+                # Tạo Treeview
+                tree = ttk.Treeview(frame, columns=["#"] + [f"Column {i+1}" for i in range(len(data[0]))], show="headings")
+                tree.grid(row=0, column=0, sticky="nsew")
 
-                # Đặt layout
-                text.grid(row=0, column=0, sticky="nsew")
+                # Cấu hình các cột
+                tree.heading("#", text="No.")
+                for i in range(len(data[0])):
+                    tree.heading(i+1, text=f"Column {i+1}", anchor="center")
+                    tree.column(i+1, anchor="center", width=120)  # Căn giữa và thiết lập độ rộng cột
+
+                # Tạo Scrollbars
+                scroll_y = Scrollbar(frame, orient="vertical", command=tree.yview)
                 scroll_y.grid(row=0, column=1, sticky="ns")
+
+                scroll_x = Scrollbar(frame, orient="horizontal", command=tree.xview)
                 scroll_x.grid(row=1, column=0, sticky="ew")
+
+                # Gắn Scrollbars với Treeview
+                tree.configure(yscrollcommand=scroll_y.set, xscrollcommand=scroll_x.set)
 
                 # Cấu hình lưới trong Frame
                 frame.grid_rowconfigure(0, weight=1)
                 frame.grid_columnconfigure(0, weight=1)
 
-                # Thêm dữ liệu vào Text widget
-                for i, row in enumerate(data):
-                    # Tô màu các dòng xen kẽ
-                    bg_color = "#f9f9f9" if i % 2 == 0 else "#e8f5e9"
-                    text.insert("end", f"{row}\n")
-                    text.tag_add(f"row{i}", f"{i}.0", f"{i}.end")
-                    text.tag_config(f"row{i}", background=bg_color)
+                # Thêm các dữ liệu vào Treeview
+                def display_page(page):
+                    for i in tree.get_children():
+                        tree.delete(i)  # Xóa dữ liệu cũ
+                    start_index = (page - 1) * rows_per_page
+                    end_index = start_index + rows_per_page
+                    page_data = data[start_index:end_index]
 
-                # Vô hiệu hóa chỉnh sửa nội dung
-                text.config(state="disabled")
+                    for i, row in enumerate(page_data, start=start_index+1):
+                        tree.insert("", "end", values=[i] + row)
+
+                # Hàm xử lý khi chuyển trang
+                def next_page():
+                    nonlocal current_page
+                    if current_page < total_pages:
+                        current_page += 1
+                        display_page(current_page)
+
+                def prev_page():
+                    nonlocal current_page
+                    if current_page > 1:
+                        current_page -= 1
+                        display_page(current_page)
+
+                # Thêm các nút chuyển trang
+                button_frame = Frame(top, bg="#f4f4f4")
+                button_frame.pack(fill="x", pady=10)
+
+                prev_button = Button(button_frame, text="Previous", command=prev_page, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5)
+                prev_button.pack(side="left", padx=5)
+
+                next_button = Button(button_frame, text="Next", command=next_page, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5)
+                next_button.pack(side="right", padx=5)
 
                 # Thêm nút Export
                 def export_to_file():
@@ -126,13 +162,17 @@ class DataApp:
                         file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt"), ("All files", "*.*")])
                         if file_path:
                             with open(file_path, "w") as file:
-                                file.write("\n".join(map(str, data)))
+                                for row in data:
+                                    file.write("\t".join(map(str, row)) + "\n")
                             messagebox.showinfo("Success", "Data exported successfully!")
                     except Exception as e:
                         messagebox.showerror("Error", f"Failed to export data: {e}")
 
-                export_button = Button(top, text="Export to File", command=export_to_file, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5)
-                export_button.pack(pady=10)
+                export_button = Button(button_frame, text="Export to File", command=export_to_file, bg="#4CAF50", fg="white", font=("Arial", 12, "bold"), padx=10, pady=5)
+                export_button.pack(side="left", padx=5)
+
+                # Hiển thị trang đầu tiên
+                display_page(current_page)
 
             else:
                 messagebox.showwarning("No Data", "No data available to display.")
