@@ -17,10 +17,45 @@ class dataProcessing:
             print(f"File {self.filePath} lỗi {e}!")
         return data
     
-    def outputData(self):
+    def outputData(self, records_per_page = 1000):
         # <In dữ liệu dưới dạng DataFrame của pandas>
         if self.data:
-            print(pd.DataFrame(self.data))
+            """
+                In dữ liệu dưới dạng DataFrame để phân trang. records_per_page: Số lượng dòng mỗi trang
+            """
+            df = pd.DataFrame(self.data)
+            
+            # Tính số trang
+            total_records = len(df)
+            total_pages = (total_records + records_per_page - 1) // records_per_page
+            
+            curr_page = 1
+            while True:
+                # Tính chỉ số dòng bắt đầu và kết thúc
+                start_idx = (curr_page - 1) * records_per_page
+                end_idx = min(start_idx + records_per_page, total_records)
+                
+                # Lấy dữ liệu cho trang
+                data_page = df.iloc[start_idx:end_idx]
+                
+                print(f"Trang {curr_page}/{total_pages}:")
+                print(data_page)
+                
+                if curr_page == total_pages:
+                    print("Dữ liệu kết thúc!")
+                    break
+                
+                # Yêu cầu của người dùng
+                user_request = int(input("Nhập '1' để sang trang, '-1' để quay lại, hoặc '0' để thoát:"))
+                if user_request == 1 and curr_page < total_pages:
+                    curr_page += 1
+                elif user_request == -1 and curr_page > 1:
+                    curr_page -= 1
+                elif user_request == 0:
+                    print('Thoát!')
+                    break
+                else:
+                    print("Nhập không hợp lệ!")   
         else:
             print("Dữ liệu trống hoặc chưa được tải!")
         
