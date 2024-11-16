@@ -96,7 +96,6 @@ def main():
                     print ("       | 4. Search Specific Data in a Column            8. Delete Outliers                        |")
                     print ("       |__________________________________________________________________________________________|")
 
-
                     while True:
                         try:
                             Clean_Choosing = int(input("Choose Cleaning Data's option: "))
@@ -104,6 +103,7 @@ def main():
 
                                 # Thoát
                                 if Clean_Choosing == 0:
+                                    print ("Exit cleaning section.")
                                     break
 
                                 # Thống kê từng dữ liệu từ file
@@ -118,6 +118,7 @@ def main():
                                             if 0 <= col_index < len(Data_Frame.getSampleData()):
                                                 reverse = input("Sort in ascending order? (y/n): ").lower() == 'y'
                                                 Cleaning_Data.sortData(col_index=col_index, reverse=reverse)
+                                                print ("Data is processed")
                                                 break
                                             else:
                                                 print ("\nInvalid Input. Please choose again.")
@@ -130,7 +131,7 @@ def main():
                                     while True:
                                         try:
                                             Get_Index = int(input("Enter row index: "))
-                                            if 0 <= Get_Index < len(Data_Frame.getData()):
+                                            if 0 < Get_Index < len(Data_Frame.getData()):
                                                 print(Cleaning_Data.getDataByIndex(Get_Index))
                                                 break
                                             else:
@@ -141,39 +142,52 @@ def main():
 
                                 # Tìm kiếm thông tin các đối tượng qua tên cột và keyword
                                 elif Clean_Choosing == 4:
-                                    colName = input("Enter Column Name: ")
-                                    if colName in Cleaning_Data.data.columns:
-                                        keyword = input("Enter keyword: ")
-                                        Cleaning_Data.searchData(keyword, colName)
-                                    else:
-                                        print ("Invalid Column Name.")
+                                    while True:
+                                        ColName = input("Enter Column Name: ")
+                                        if ColName in Cleaning_Data.data.columns:
+                                            keyword = input("Enter keyword: ")
+                                            Cleaning_Data.searchData(keyword, ColName)
+                                            break
+                                        else:
+                                            print ("\nInvalid Column Name. Please try again.")
 
                                 # Xóa những dòng bị thiếu dữ liệu
                                 elif Clean_Choosing == 5:
                                     Cleaning_Data.deleteMissingData()
+                                    print ("\nData is processed")
 
                                 # Điền giá trị vào ô trống qua từng qua cột
                                 elif Clean_Choosing == 6:
-                                    colName = input("Enter Column Name: ")
-                                    if colName in Cleaning_Data.data.columns:
-                                        value = input("Enter Filling Value: ")
-                                        Cleaning_Data.fillMissingData(colName, value)
-                                    else:
-                                        print ("Invalid Column Name.")
+                                    while True:
+                                        ColName = input("Enter Column Name: ")
+                                        if ColName in Cleaning_Data.data.columns:
+                                            value = input("Enter Filling Value: ")
+                                            Cleaning_Data.fillMissingData(ColName, value)
+                                            print ("\nData is processed")
+                                            break
+                                        else:
+                                            print ("\nInvalid Column Name. Please try again.")
 
                                 # Chuẩn hóa dữ liệu
                                 elif Clean_Choosing == 7:
-                                    Cleaning_Data.cleanCategoryData('Gender', ['male', 'female', 'other'])
-                                    Cleaning_Data.cleanCategoryData('School_Type', ['public', 'private'])
-                                    Cleaning_Data.cleanCategoryData('Parental_Education_Level', ['high school', 'college', 'postgraduate'])
+                                    while True:
+                                        Standardized_Col = input("Input column you want to standardize: ")
+                                        if Standardized_Col in Cleaning_Data.data.columns:
+                                            Valid_List = input("Enter valid values separated by comma: ").split(',')
+                                            Cleaning_Data.cleanCategoryData(Standardized_Col, Valid_List)
+                                            print ("\nData is processed")
+                                        else:
+                                            print ("\nInvalid Column Name. Please try again.")
+
 
                                 # Xóa những giá trị ngoại lai
                                 elif Clean_Choosing == 8:
                                     Cleaning_Data.deleteOutliers()
+                                    print ("\nData is processed")
 
                                 # Lưu dữ liệu đã được xử lý vào file khác
                                 Cleaning_Data.data.to_csv(outfileDataCleaned, index=False)
-                                print("Data is saved in new CSV file.")
+                                print("\nData is saved in new CSV file.")
                             else:
                                 print ("\nInvalid input. Please choose again")
                                 continue
