@@ -176,6 +176,7 @@ def main():
                                             Valid_List = input("Enter valid values separated by comma: ").split(',')
                                             Cleaning_Data.cleanCategoryData(Standardized_Col, Valid_List)
                                             print ("\nData is processed")
+                                            break
                                         else:
                                             print ("\nInvalid Column Name. Please try again.")
 
