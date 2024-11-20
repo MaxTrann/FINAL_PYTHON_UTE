@@ -31,7 +31,7 @@ class dataCleaner:
     def getDataByIndex(self, idx):
         # <Lấy dữ liệu thông qua chỉ số dòng>
         if 0 <= idx <= len(self.data):
-            return self.data.iloc[idx - 1]
+            return self.data.iloc[idx - 1] # ở đây lấy idx - 1 bởi vì người dùng sẽ nhìn vào file csv để thao tác mà dòng 0 chứa biến dữ liệu, nên record bắt đầu ở dòng 1 tuy nhiên theo cách thức hoạt động của list bắt đầu từ 0 nên trừ đi 1 
         else:
             print("Vị trí không hợp lệ!")
             return None
@@ -56,15 +56,17 @@ class dataCleaner:
     def fillMissingData(self, colName, value):
         # <Điền giá trị vào ô trống trong một cột>
         if colName in self.data.columns:
-            self.data[colName].fillna(value)
-            print(f"Thêm giá trị {value} vào {colName} thành công!")
+            missingCnt = self.data[colName].isna().sum() # đếm số lượng cột bị thiếu
+            if missingCnt > 0:
+                self.data[colName].fillna(value, inplace = True)
+                print(f"Thêm giá trị {value} vào {colName} thành công!")
+                print(f"Số lượng giá trị đã được điền thêm: {missingCnt}")
+            else:
+                print(f"Cột {colName} không có giá trị bị thiếu")
         else:
             print("Tên cột không hợp lệ")
     
-    def cleanCategoryData(self, colName, validValues):
-        # <Chuẩn hóa dữ liệu chữ Femal thì femal được; Public thì public được>
-        self.data[colName] = self.data[colName].str.lower()
-        #self.data = self.data[self.data[colName].isin(validValues)]
+    def standardizeCategoryData(self, colName):
         self.data[colName] = self.data[colName].str.capitalize()
     
     
@@ -73,14 +75,3 @@ class dataCleaner:
         validGenders = ['Male', 'Female', 'Other']
         self.data = self.data[self.data['Gender'].isin(validGenders)] # Những cú pháp hợp lệ của gender   
         self.data = self.data[(self.data['Exam_Score'] <= 100) & (self.data['Exam_Score'] >= 0)] # Xử lí trường hợp điểm số
-        
-    
-def main():
-    cleaner = dataCleaner("StudentPerformanceFactors.csv")
-
-    # Chuẩn hóa cột phân loại
-    cleaner.cleanCategoricalData('Gender', ['male', 'female', 'other'])
-    cleaner.cleanCategoricalData('School_Type', ['public', 'private'])
-    
-
-    
