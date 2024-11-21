@@ -173,8 +173,7 @@ def main():
                                     while True:
                                         Standardized_Col = input("Input column you want to standardize: ")
                                         if Standardized_Col in Cleaning_Data.data.columns:
-                                            Valid_List = input("Enter valid values separated by comma: ").split(',')
-                                            Cleaning_Data.cleanCategoryData(Standardized_Col, Valid_List)
+                                            Cleaning_Data.standardizeCategoryData(Standardized_Col)
                                             print ("\nData is processed")
                                             break
                                         else:
