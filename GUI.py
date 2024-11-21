@@ -3,7 +3,7 @@ from tkinter import Tk, Canvas, Button, PhotoImage, messagebox, simpledialog, To
 from dataCRUD import dataProcessing
 from dataCleaning import *
 from tkinter.scrolledtext import ScrolledText
-import subprocess
+import subprocess # Thư viện để chạy script visualization.py
 
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / "GUI" / "build" / "assets" / "frame0"
@@ -545,11 +545,11 @@ class DataApp:
                 if standardized_col is None:
                     break
                 if standardized_col in cleaner.data.columns:
-                    valid_list = simpledialog.askstring("Input", "Enter valid values separated by comma:")
-                    if valid_list is None:
-                        break
-                    valid_list = valid_list.split(',')
-                    cleaner.cleanCategoryData(standardized_col, valid_list)
+                    # valid_list = simpledialog.askstring("Input", "Enter valid values separated by comma:")
+                    # if valid_list is None:
+                    #     break
+                    # valid_list = valid_list.split(',')
+                    cleaner.standardizeCategoryData(standardized_col)
                     self.show_data_in_window("Standardized Data", cleaner.data.to_string())
                 else:
                     messagebox.showwarning("Invalid Column", "Invalid Column Name. Please try again.")
