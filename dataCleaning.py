@@ -14,13 +14,14 @@ class dataCleaner:
             return pd.DataFrame()
     
     def aggregateData(self):
-        # <Thống kê dữ liệu của file>
+        # <Thống kê giá trị xuất hiện trong từng cột của DataFrame>
         print("Thống kê các giá trị có trong file:")
         for col in self.data.columns:
             print(f"\nThông tin về cột {col}': ")
             print(self.data[col].value_counts())
             
     def sortData(self, col_index=0, reverse=False):
+        # <Sắp xếp dữ liệu theo một cột được chỉ định>
         try:
             col_name = self.data.columns[col_index]
             self.data = self.data.sort_values(by=col_name, ascending=reverse)
@@ -37,7 +38,7 @@ class dataCleaner:
             return None
     
     def searchData(self, keyword, colName):
-        # <Tìm kiếm dữ liệu thông qua keyword, và tên cột>
+        # <Tìm kiếm dữ liệu trong một cột dựa trên từ khóa>
         if colName in self.data.columns:
             ans = self.data[self.data[colName].astype(str).str.contains(keyword,case=False,na=False)]
             if not ans.empty:
@@ -50,11 +51,11 @@ class dataCleaner:
     
     
     def deleteMissingData(self):
-        # <Hàm để loại bỏ những dòng bị thiếu dữ liệu NULL (NaN)>
+        # <Hàm để loại bỏ những dòng bị thiếu dữ liệu NaN>
         self.data = self.data.dropna(axis=0)
     
     def fillMissingData(self, colName, value):
-        # <Điền giá trị vào ô trống trong một cột>
+        # <Điền giá trị cụ thể vào các ô trống trong một cột. Cho biết được số dòng còn thiếu trong cột đó>
         if colName in self.data.columns:
             missingCnt = self.data[colName].isna().sum() # đếm số lượng cột bị thiếu
             if missingCnt > 0:
@@ -67,11 +68,12 @@ class dataCleaner:
             print("Tên cột không hợp lệ")
     
     def standardizeCategoryData(self, colName):
+        # <Chuẩn hóa dữ liệu trong một cột>
         self.data[colName] = self.data[colName].str.capitalize()
     
     
     def deleteOutliers(self):
-        # <Xử lí các số liệu ngoại lai>
+        # <Loại bỏ các giá trị ngoại lai dựa trên những nguyên tắc đã được định sẵn>
         validGenders = ['Male', 'Female', 'Other']
         self.data = self.data[self.data['Gender'].isin(validGenders)] # Những cú pháp hợp lệ của gender   
         self.data = self.data[(self.data['Exam_Score'] <= 100) & (self.data['Exam_Score'] >= 0)] # Xử lí trường hợp điểm số
