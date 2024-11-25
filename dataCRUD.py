@@ -78,7 +78,7 @@ class dataProcessing:
                 self.data[index] = newData
                 print("Dữ liệu đã được cập nhật!")
             else:
-                print("Dữ liệu không hợp lệ với số cột!")
+                print("Dữ liệu không hợp lệ với số dòng!")
         else:
             print("Vị trí thêm không hợp lệ!")
             
