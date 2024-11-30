@@ -40,7 +40,7 @@ class dataCleaner:
     def searchData(self, keyword, colName):
         # <Tìm kiếm dữ liệu trong một cột dựa trên từ khóa>
         if colName in self.data.columns:
-            ans = self.data[self.data[colName].astype(str).str.contains(keyword,case=False,na=False)]
+            ans = self.data[self.data[colName].astype(str).str.contains(keyword,case=True,na=False)]
             if not ans.empty:
                 print("Kết quả tìm kiếm: ")
                 print(ans)
